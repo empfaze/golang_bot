@@ -2,6 +2,7 @@ package storage
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"io"
 
@@ -19,6 +20,8 @@ type Page struct {
 	URL      string
 	Username string
 }
+
+var ErrNoSavedPages error = errors.New("No saved pages")
 
 func (p Page) Hash() (string, error) {
 	hash := sha1.New()
