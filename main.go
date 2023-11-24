@@ -4,14 +4,29 @@ import (
 	"flag"
 	"log"
 
-	"github.com/empfaze/golang_bot/clients/telegram"
+	clientsTelegram "github.com/empfaze/golang_bot/clients/telegram"
+	"github.com/empfaze/golang_bot/consumer/event_consumer"
+	eventsTelegram "github.com/empfaze/golang_bot/events/telegram"
+	"github.com/empfaze/golang_bot/lib/files"
 )
 
-const tgBotHost = "api.telegram.org"
+const (
+	TG_BOT_HOST  = "api.telegram.org"
+	STORAGE_PATH = "storage"
+	BATCH_SIZE   = 100
+)
 
 func main() {
-	token := mustToken()
-	tgClient := telegram.New(tgBotHost, token)
+	tgClient := clientsTelegram.New(TG_BOT_HOST, mustToken())
+	eventsProcessor := eventsTelegram.New(tgClient, files.New(STORAGE_PATH))
+
+	log.Printf("Service has been started")
+
+	consumer := event_consumer.New(eventsProcessor, eventsProcessor, BATCH_SIZE)
+
+	if err := consumer.Start(); err != nil {
+		log.Fatal("Service has been stopped", err)
+	}
 }
 
 func mustToken() string {

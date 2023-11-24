@@ -3,14 +3,14 @@ package telegram
 import (
 	"errors"
 
-	"github.com/empfaze/golang_bot/clients/telegram"
+	clientsTelegram "github.com/empfaze/golang_bot/clients/telegram"
 	"github.com/empfaze/golang_bot/events"
 	"github.com/empfaze/golang_bot/lib/storage"
 	"github.com/empfaze/golang_bot/utils"
 )
 
 type Processor struct {
-	tg      *telegram.Client
+	tg      *clientsTelegram.Client
 	offset  int
 	storage storage.Storage
 }
@@ -25,7 +25,7 @@ var (
 	ErrUnknownMeta  = errors.New("Unknown meta type")
 )
 
-func New(client *telegram.Client, storage storage.Storage) *Processor {
+func New(client *clientsTelegram.Client, storage storage.Storage) *Processor {
 	return &Processor{
 		tg:      client,
 		storage: storage,
@@ -84,7 +84,7 @@ func meta(event events.Event) (Meta, error) {
 	return result, nil
 }
 
-func event(update telegram.Update) events.Event {
+func event(update clientsTelegram.Update) events.Event {
 	updType := fetchType(update)
 	updText := fetchText(update)
 
@@ -103,7 +103,7 @@ func event(update telegram.Update) events.Event {
 	return result
 }
 
-func fetchType(update telegram.Update) events.Type {
+func fetchType(update clientsTelegram.Update) events.Type {
 	if update.Message == nil {
 		return events.UNKNOWN
 	}
@@ -111,7 +111,7 @@ func fetchType(update telegram.Update) events.Type {
 	return events.MESSAGE
 }
 
-func fetchText(update telegram.Update) string {
+func fetchText(update clientsTelegram.Update) string {
 	if update.Message == nil {
 		return ""
 	}

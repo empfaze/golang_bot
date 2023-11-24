@@ -110,7 +110,7 @@ func (s Storage) Remove(p *storage.Page) error {
 	return nil
 }
 
-func (s Storage) IsExists(p *storage.Page) (bool, error) {
+func (s Storage) IsExist(p *storage.Page) (bool, error) {
 	fileName, err := fileName(p)
 	if err != nil {
 		return false, utils.WrapError("can't check if file exists", err)
