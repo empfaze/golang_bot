@@ -65,10 +65,10 @@ func (p *Processor) Process(event events.Event) error {
 func (p *Processor) processMessage(event events.Event) error {
 	meta, err := meta(event)
 	if err != nil {
-		return utils.WrapError("Couldn't process message: ", err)
+		return utils.WrapError("Couldn't get meta ", err)
 	}
 
-	if err != p.doCmd(event.Text, meta.ChatID, meta.Username) {
+	if err := p.doCmd(event.Text, meta.ChatID, meta.Username); err != nil {
 		return utils.WrapError("Couldn't process message: ", err)
 	}
 

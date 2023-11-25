@@ -90,6 +90,7 @@ func (c *Client) SendMessage(chatID int, text string) error {
 	const errMsg = "Can't send message"
 
 	queryValues := url.Values{}
+
 	queryValues.Add("chat_id", strconv.Itoa(chatID))
 	queryValues.Add("text", text)
 

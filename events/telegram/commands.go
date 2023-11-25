@@ -22,7 +22,7 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 	log.Printf("Got new command '%s' from '%s'", text, username)
 
 	if isAddCmd(text) {
-		p.savePage(text, chatID, username)
+		return p.savePage(text, chatID, username)
 	}
 
 	switch text {
@@ -65,7 +65,7 @@ func (p *Processor) savePage(pageUrl string, chatID int, username string) error 
 
 func (p *Processor) sendRandom(chatID int, username string) error {
 	page, err := p.storage.PickRandom(username)
-	if err != nil && errors.Is(err, storage.ErrNoSavedPages) {
+	if err != nil && !errors.Is(err, storage.ErrNoSavedPages) {
 		return utils.WrapError("Couldn't send random: ", err)
 	}
 
