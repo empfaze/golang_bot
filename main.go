@@ -1,24 +1,37 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 
 	clientsTelegram "github.com/empfaze/golang_bot/clients/telegram"
 	"github.com/empfaze/golang_bot/consumer/event_consumer"
 	eventsTelegram "github.com/empfaze/golang_bot/events/telegram"
-	"github.com/empfaze/golang_bot/lib/files"
+	"github.com/empfaze/golang_bot/sqlite"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const (
-	TG_BOT_HOST  = "api.telegram.org"
-	STORAGE_PATH = "files_storage"
-	BATCH_SIZE   = 100
+	TG_BOT_HOST         = "api.telegram.org"
+	SQLITE_STORAGE_PATH = "data/sqlite/storage.db"
+	BATCH_SIZE          = 100
 )
 
 func main() {
 	tgClient := clientsTelegram.New(TG_BOT_HOST, mustToken())
-	eventsProcessor := eventsTelegram.New(tgClient, files.New(STORAGE_PATH))
+
+	storage, err := sqlite.New(SQLITE_STORAGE_PATH)
+	if err != nil {
+		log.Fatal("Couldn't connect to storage: ", err)
+	}
+
+	if err := storage.Init(context.TODO()); err != nil {
+		log.Fatal("Couldn't init storage: ", err)
+	}
+
+	eventsProcessor := eventsTelegram.New(tgClient, storage)
 
 	log.Printf("Service has been started")
 

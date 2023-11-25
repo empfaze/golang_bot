@@ -1,2 +1,4 @@
 files_storage/
 golang_bot
+data/
+/vendor

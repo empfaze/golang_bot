@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"context"
 	"errors"
 
 	clientsTelegram "github.com/empfaze/golang_bot/clients/telegram"
@@ -68,7 +69,7 @@ func (p *Processor) processMessage(event events.Event) error {
 		return utils.WrapError("Couldn't get meta ", err)
 	}
 
-	if err := p.doCmd(event.Text, meta.ChatID, meta.Username); err != nil {
+	if err := p.doCmd(context.Background(), event.Text, meta.ChatID, meta.Username); err != nil {
 		return utils.WrapError("Couldn't process message: ", err)
 	}
 
